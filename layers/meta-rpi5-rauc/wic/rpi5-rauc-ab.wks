@@ -1,0 +1,26 @@
+# Raspberry Pi 5 A/B Partition Layout for RAUC
+# =============================================
+# Target: 32GB SD Card
+#
+# Partition Layout:
+#   1. boot      - 256MB  FAT32  - RPi firmware, kernel, DTBs
+#   2. rootfs_a  - 8GB    ext4   - Root filesystem Slot A (active)
+#   3. rootfs_b  - 8GB    ext4   - Root filesystem Slot B (inactive)
+#   4. data      - ~12GB  ext4   - Persistent data partition
+#
+# Total: ~28GB used, leaving headroom for "32GB" cards (which are smaller in GiB)
+
+# Use an MBR partition table for maximum Raspberry Pi boot firmware compatibility
+bootloader --ptable msdos
+
+# Boot partition (FAT32 for RPi firmware compatibility)
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 4096 --fixed-size 256M
+
+# Root filesystem A (primary slot)
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs_a --align 4096 --fixed-size 8192M
+
+# Root filesystem B (secondary slot for updates)
+part --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs_b --align 4096 --fixed-size 8192M
+
+# Persistent data partition (fills remaining space)
+part /data --ondisk mmcblk0 --fstype=ext4 --label data --align 4096 --fixed-size 12000M

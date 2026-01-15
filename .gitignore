@@ -1,0 +1,34 @@
+# Yocto build artifacts
+build/
+build/tmp/
+build/cache/
+build/sstate-cache/
+downloads/
+sstate-cache/
+
+# Output images
+output/
+
+# Cloned layers (clone fresh)
+layers/poky/
+layers/meta-openembedded/
+layers/meta-raspberrypi/
+layers/meta-rauc/
+
+# RAUC private keys - NEVER commit these!
+layers/meta-rpi5-rauc/files/*.key.pem
+layers/meta-rpi5-rauc/files/*.cert.pem
+layers/meta-rpi5-rauc/files/ca.srl
+
+# Project build configuration
+conf/project-build.conf
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.history

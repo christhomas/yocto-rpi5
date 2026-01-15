@@ -1,0 +1,12 @@
+# Example project-build.conf
+# - Rename to project-build.conf and place in the same directory as this file
+# - Add your custom configuration here
+# =========================
+
+# BB_NUMBER_THREADS ?= "4"
+# PARALLEL_MAKE ?= "-j4"
+
+#RPI5_SSH_USERNAME ?= "__username__"
+#RPI5_SSH_UID ?= "1000"
+#RPI5_SSH_GID ?= "1000"
+#RPI5_SSH_PUBLIC_KEY ?= "__public_key__"

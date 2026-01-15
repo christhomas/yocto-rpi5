@@ -1,0 +1,55 @@
+services:
+  yocto-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+        USERNAME: yocto
+    image: yocto-rpi5-builder:latest
+    container_name: yocto-rpi5-build
+    hostname: yocto-builder
+    
+    # Mount the project directory
+    volumes:
+      # Main project mount
+      - .:/yocto/project
+      # Separate volumes for build artifacts (better performance on macOS)
+      - yocto-sstate:/yocto/project/sstate-cache
+      - yocto-downloads:/yocto/project/downloads
+      - yocto-build:/yocto/project/build/tmp
+    
+    # Keep container running for interactive use
+    stdin_open: true
+    tty: true
+    
+    # Resource limits (adjust based on your Mac's specs)
+    # Yocto builds are resource-intensive
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+        reservations:
+          memory: 8G
+    
+    working_dir: /yocto/project
+    
+    # Environment variables
+    environment:
+      - TERM=xterm-256color
+      - LANG=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
+      - TMPDIR=/yocto/project/.tmp
+      - TMP=/yocto/project/.tmp
+      - TEMP=/yocto/project/.tmp
+
+# Named volumes for better I/O performance on macOS
+# These store large build artifacts outside the bind mount
+volumes:
+  yocto-sstate:
+    driver: local
+  yocto-downloads:
+    driver: local
+  yocto-build:
+    driver: local
