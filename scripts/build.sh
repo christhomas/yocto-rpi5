@@ -46,7 +46,7 @@ ensure_project_build_conf() {
 check_layers() {
     local missing=0
     
-    for layer in poky meta-openembedded meta-raspberrypi meta-rauc; do
+    for layer in poky meta-openembedded meta-raspberrypi meta-rauc meta-lts-mixins; do
         if [ ! -d "$PROJECT_DIR/layers/$layer" ]; then
             log_error "Missing layer: $layer"
             missing=1
@@ -57,6 +57,23 @@ check_layers() {
         log_error "Please run './scripts/setup-layers.sh' first"
         exit 1
     fi
+}
+
+ensure_lts_mixins_layer() {
+    local lts_mixins_path="$PROJECT_DIR/layers/meta-lts-mixins"
+    
+    if [ ! -d "$lts_mixins_path" ]; then
+        log_warn "meta-lts-mixins layer not found. Please run './project setup-layers' first."
+        return
+    fi
+    
+    # Check if layer is already added
+    if bitbake-layers show-layers 2>/dev/null | grep -q "meta-lts-mixins"; then
+        return
+    fi
+    
+    log_info "Adding meta-lts-mixins layer for U-Boot RPi5 support..."
+    bitbake-layers add-layer "$lts_mixins_path"
 }
 
 ensure_rauc_keys() {
@@ -93,6 +110,7 @@ build_image() {
     source layers/poky/oe-init-build-env build
 
     ensure_project_build_conf "$PROJECT_DIR/build"
+    ensure_lts_mixins_layer
     
     log_info "Starting build for target: $target"
     log_info "This will take a while (1-4 hours depending on your system)..."

@@ -227,7 +227,7 @@ cmd_write_image() {
     log_info "Copying built images to output/ directory..."
     cd "$PROJECT_DIR"
  
-    if [ "${1:-}" = "--force-wic" ]; then
+    if [ "${1:-}" = "--force" ]; then
         log_info "Forcing WIC image regeneration inside Docker..."
         docker-compose exec -u yocto yocto-build bash -lc "
             set -e
@@ -269,7 +269,7 @@ case "${1:-help}" in
     clean)   cmd_clean ;;
     clean-state) shift; cmd_clean_state "$@" ;;
     clean-failed) cmd_clean_failed ;;
-    write-image) cmd_write_image ;;
+    write-image) shift; cmd_write_image "$@" ;;
     help|--help|-h)
         show_help
         ;;

@@ -54,6 +54,10 @@ IMAGE_INSTALL += " \
     rpi5-rauc-data-mount \
 "
 
+IMAGE_BOOT_FILES:append = " \
+    u-boot.bin;kernel_2712.img \
+"
+
 # Root filesystem size (8GB per slot)
 IMAGE_ROOTFS_SIZE = "8388608"
 

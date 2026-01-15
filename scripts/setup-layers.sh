@@ -59,6 +59,9 @@ main() {
     # RAUC update framework layer
     clone_layer "meta-rauc" "https://github.com/rauc/meta-rauc.git"
     
+    # U-Boot LTS mixin layer (provides U-Boot 2024.04+ with RPi5 support)
+    clone_layer "meta-lts-mixins" "git://git.yoctoproject.org/meta-lts-mixins" "scarthgap/u-boot"
+    
     echo ""
     log_info "All layers cloned successfully!"
     log_info ""
